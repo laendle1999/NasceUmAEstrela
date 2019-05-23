@@ -244,62 +244,60 @@ def playgame():
         print(message)
 
 
-def jogar(cell):
+def jogar(cell,currgrid,grid,flags,mines,flag=False):
     if cell:
-            print('\n\n')
-            rowno, colno = cell
-            #print(rowno)
-            #print(colno)
-            currcell = currgrid[rowno][colno]
-            flag = result['flag']
+        print('\n\n')
+        rowno, colno = cell
+        #print(rowno)
+        #print(colno)
+        currcell = currgrid[rowno][colno]
 
-            if not grid:
-                grid, mines = setupgrid(gridsize, cell, numberofmines)
-            if not starttime:
-                starttime = time.time()
+        if not grid:
+            grid, mines = setupgrid(gridsize, cell, numberofmines)
+        
 
-            if flag:
-                # Add a flag if the cell is empty
-                if currcell == ' ':
-                    currgrid[rowno][colno] = 'F'
-                    flags.append(cell)
-                # Remove the flag if there is one
-                elif currcell == 'F':
-                    currgrid[rowno][colno] = ' '
-                    flags.remove(cell)
-                else:
-                    message = 'Cannot put a flag there'
-
-            # If there is a flag there, show a message
-            elif cell in flags:
-                message = 'There is a flag there'
-
-            elif grid[rowno][colno] == 'X':
-                print('Game Over\n')
-                showgrid(grid)
-                if playagain():
-                    playgame()
-                return
-
-            elif currcell == ' ':
-                showcells(grid, currgrid, rowno, colno)
-
+        if flag:
+            # Add a flag if the cell is empty
+            if currcell == ' ':
+                currgrid[rowno][colno] = 'F'
+                flags.append(cell)
+            # Remove the flag if there is one
+            elif currcell == 'F':
+                currgrid[rowno][colno] = ' '
+                flags.remove(cell)
             else:
-                message = "That cell is already shown"
-                abrirVizinhos(grid, currgrid, rowno, colno)
+                message = 'Cannot put a flag there'
 
-            if set(flags) == set(mines):
-                minutes, seconds = divmod(int(time.time() - starttime), 60)
-                print(
-                    'You Win. '
-                    'It took you {} minutes and {} seconds.\n'.format(minutes,
-                                                                      seconds))
-                showgrid(grid)
-                if playagain():
-                    playgame()
-                return
+        # If there is a flag there, show a message
+        elif cell in flags:
+            message = 'There is a flag there'
+
+        elif grid[rowno][colno] == 'X':
+            print('Game Over\n')
+            showgrid(grid)
+            if playagain():
+                playgame()
+            return
+
+        elif currcell == ' ':
+            showcells(grid, currgrid, rowno, colno)
+
+        else:
+            message = "That cell is already shown"
+            abrirVizinhos(grid, currgrid, rowno, colno)
+
+        if set(flags) == set(mines):
+            #minutes, seconds = divmod(int(time.time() - starttime), 60)
+            print(
+                'You Win. '
+                'It took you {} minutes and {} seconds.\n'.format(minutes,
+                                                                  seconds))
+            showgrid(grid)
+            if playagain():
+                playgame()
+            return
 
         showgrid(currgrid)
         print(currgrid)
 
-playgame()
+#playgame()

@@ -1,6 +1,7 @@
 #reberto.py agora vai jogar campo minado otarios
 from dataclasses import dataclass
 import sys
+import time
 
 @dataclass
 class Tno_ad:
@@ -27,7 +28,7 @@ def contarCasas(mapa):
 	x = 0
 	for linha in mapa:
 		for cell in linha:
-			if cell != " ";
+			if cell != ' ':
 				x+=1
 	return x
 
@@ -42,7 +43,7 @@ def gerarListas(mapa, abertos, fechados):
 			elif(cell==0):
 				fechados.append((x,y))
 			elif(cell!=0 and cell!=' ' and cell!='F'):
-				if(checkNeighbors(mapa,x,y)==1):
+				if(checkNeighbors(mapa,x,y)==1 and checarCasa(mapa,(x,y)) == 0):
 					abertos.append((x,y))
 				else:
 					fechados.append((x,y))
@@ -50,7 +51,7 @@ def gerarListas(mapa, abertos, fechados):
 		x=x+1
 
 def checarCasa(mapa, cell):
-	casasFechadas == 0
+	casasFechadas = 0
 	bombas = 0
 	x,y = cell
 	for a in range(x-1, x+1):
@@ -69,7 +70,7 @@ def casasAAbrir(mapa, cell):
 	casasFechadas = 0
 	for a in range(linha-1, linha+1):
 		for b in range(coluna-1, coluna+1):
-			if(valido(a,b))
+			if(valido(a,b)):
 				if(mapa[a][b] == ' '):
 					casasFechadas+= 1
 
@@ -80,8 +81,8 @@ def funcHeurisitca(mapa,cell):
 	return casasAAbrir(mapa,cell) + contarCasas(mapa)
 
 
-def econtrarBombas(mapa):
-	from minesweeper import *
+def encontrarBombas(mapa):
+	from minesweeper import getneighbors
 	vizinhos = []
 	probRedor = []
 	bombas = []
@@ -92,37 +93,66 @@ def econtrarBombas(mapa):
 			if cell == " ":
 				vizinhos = getneighbors(mapa,x,y)
 				for v in vizinhos:
-					if v != " ":
+					if mapa[x][y] != " ":
 						probRedor.append(checarCasa(mapa,v))
-				if max(probRedor) == 1:
-					bombas.append(x,y)
+				if probRedor:
+					if max(probRedor) == 1:
+						bombas.append(x,y)
 			y+=1
 		x+=1
 
 	return bombas
 
 
-def aEstrelaBusca(mapa):
+def aEstrelaBusca():
+	from minesweeper import setupgrid
+	from minesweeper import jogar
+
 	abertos=[]
 	fechados=[]
 	
-	#while True:
-	gerarListas(mapa, abertos, fechados)
-	temp = 0
-	val = 0
-	cellAbrir = (4,4)
-	if casasAAbrir(mapa) == 0:
-		#break
-		return (-1,-1)
+	gridsize = 9
+	numberofmines = 10
 
-	if not abertos:
-		for cell in abertos:
-			temp = funcHeurisitca(mapa,cell)
-			if(temp > val):
-				cellAbrir = cell
-				val = temp
+	grid = []
+	flags = []
+	starttime = 0
+	
+	currgrid = [[' ' for i in range(gridsize)] for i in range(gridsize)]
+	cell = (0,0)
 
-	return cellAbrir
+	if not grid:
+		grid, mines = setupgrid(gridsize, cell, numberofmines)
+	#if not starttime:
+		#starttime = time.time()
+
+	jogar(cell,currgrid,grid,flags,mines)
+	while True:
+		bombas = []
+		bombas = encontrarBombas(currgrid)
+		if bombas:
+			for b in bombas:
+				jogar(b,currgrid,grid,flags,mines,flag=True)
+
+		gerarListas(currgrid, abertos, fechados)
+		temp = 0
+		val = 0
+		cellAbrir = (0,0)
+		if contarCasas(currgrid) == 81:
+			print("Acabou o Jogo")
+			break
+
+
+		print(abertos)
+		if abertos:
+			for cell in abertos:
+				temp = funcHeurisitca(currgrid,cell)
+				if(temp > val):
+					cellAbrir = cell
+					val = temp
+
+		jogar(cellAbrir,currgrid,grid,flags,mines)
+
 
 
 
@@ -189,7 +219,7 @@ def checarCasa(cell, mapa, numero):
 	#retorn h(x) -> funcao heuristica
 
 #definir a f(x)
-'''
+
 mapa=eval(sys.argv[1])
 abertos=[]
 fechados=[]
@@ -198,3 +228,6 @@ print('Abertos:')
 print(abertos)
 print('\nFechados')
 print(fechados)
+'''
+
+aEstrelaBusca()
