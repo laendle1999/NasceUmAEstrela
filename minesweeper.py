@@ -4,6 +4,7 @@ import re
 import time
 import sys
 import subprocess
+#import reberto as rere
 from string import ascii_lowercase
 
 
@@ -174,13 +175,17 @@ def playgame():
         minesleft = numberofmines - len(flags)
         #prompt = input('Enter the cell ({} mines left): '.format(minesleft))
         #print('Enter the cell ({} mines left): '.format(minesleft))
+        '''
         prompt = subprocess.Popen(['python', 'reberto.py', str(currgrid)], stdout=subprocess.PIPE).communicate()[0].decode("utf-8").rstrip()
         print(prompt)
         result = parseinput(prompt, gridsize, helpmessage + '\n')
         if result==1:
             print('O algoritmo fez uma jogada invalida, o jogo sera finalizado')
             return 1
-
+        '''
+        minesleft = numberofmines - len(flags)
+        prompt = input('Enter the cell ({} mines left): '.format(minesleft))
+        result = parseinput(prompt, gridsize, helpmessage + '\n')
         message = result['message']
         cell = result['cell']
 
@@ -225,7 +230,8 @@ def playgame():
 
             else:
                 message = "That cell is already shown"
-                abrirVizinhos(grid, currgrid, rowno, colno)
+                #abrirVizinhos(grid, currgrid, rowno, colno)
+                print(rere.checarCasa(currgrid,cell))
 
             if set(flags) == set(mines):
                 minutes, seconds = divmod(int(time.time() - starttime), 60)

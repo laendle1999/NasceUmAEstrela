@@ -7,16 +7,35 @@ import time
 class Tno_ad:
 	cell: (int,int)
 	f: float = -1
+'''
+def getNumero(mapa,x,y):
+	return mapa[x][y]
+'''
+
+def getNumero(mapa,cell):
+	x,y = cell
+	return mapa[x][y]
+
+
 
 #checa se a casa pertence ao tabuleiro
 def valido(x, y) :
-    if (x < 0 or x > 9 or
-        y < 0 or y > 9) :
+    if (x < 0 or x > 8 or
+        y < 0 or y > 8) :
         return False
     return True
 
 #checa todos os vizinhos
 def checkNeighbors(mapa, x, y):
+	for a in range(x-1, x+1):
+		for b in range(y-1, y+1):
+			if(valido(a,b)):
+				if(mapa[a][b]== ' '):
+					return 1
+	return 0
+
+def checkNeighbors(mapa, cell):
+	x,y = cell
 	for a in range(x-1, x+1):
 		for b in range(y-1, y+1):
 			if(valido(a,b)):
@@ -40,10 +59,15 @@ def gerarListas(mapa, abertos, fechados):
 		for cell in linha:
 			if(cell=='F'):
 				fechados.append((x,y))
-			elif(cell==0):
+			elif(int(cell)==0):
+				print("oxi")
 				fechados.append((x,y))
-			elif(cell!=0 and cell!=' ' and cell!='F'):
-				if(checkNeighbors(mapa,x,y)==1 and checarCasa(mapa,(x,y)) == 0):
+			elif(int(cell)!=0 and cell!=' ' and cell!='F'):
+				print("gerarListas")
+				print(str(x)+","+str(y))
+				print(checkNeighbors(mapa,(x,y)))
+				print(checarCasa(mapa,(x,y)))
+				if(checkNeighbors(mapa,(x,y))==1 and checarCasa(mapa,(x,y)) == 0):
 					abertos.append((x,y))
 				else:
 					fechados.append((x,y))
@@ -54,10 +78,11 @@ def checarCasa(mapa, cell):
 	casasFechadas = 0
 	bombas = 0
 	x,y = cell
-	for a in range(x-1, x+1):
-		for b in range(y-1, y+1):
+	for a in range(x-1, x+2):
+		for b in range(y-1, y+2):
+			#print(str(a) + " " + str(b))
 			if(valido(a,b)):
-				if(mapa[a][b]== ' '):
+				if(mapa[a][b] == ' '):
 					casasFechadas+= 1
 				elif(mapa[a][b] == 'F'):
 					bombas += 1
@@ -92,12 +117,16 @@ def encontrarBombas(mapa):
 		for cell in linha:
 			if cell == " ":
 				vizinhos = getneighbors(mapa,x,y)
+				print(vizinhos)
 				for v in vizinhos:
-					if mapa[x][y] != " ":
+					if(getNumero(mapa,v) != " "):
+						#print(v)
+						#print(checarCasa(mapa,v))
 						probRedor.append(checarCasa(mapa,v))
 				if probRedor:
 					if max(probRedor) == 1:
-						bombas.append(x,y)
+						bombas.append((x,y))
+					probRedor = []	
 			y+=1
 		x+=1
 
@@ -130,6 +159,7 @@ def aEstrelaBusca():
 	while True:
 		bombas = []
 		bombas = encontrarBombas(currgrid)
+		print(bombas)
 		if bombas:
 			for b in bombas:
 				jogar(b,currgrid,grid,flags,mines,flag=True)
@@ -142,7 +172,7 @@ def aEstrelaBusca():
 			print("Acabou o Jogo")
 			break
 
-
+		print("abertos: ")
 		print(abertos)
 		if abertos:
 			for cell in abertos:
@@ -152,6 +182,7 @@ def aEstrelaBusca():
 					val = temp
 
 		jogar(cellAbrir,currgrid,grid,flags,mines)
+		input("Pressione <enter> para continuar")
 
 
 
