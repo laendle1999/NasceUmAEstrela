@@ -40,8 +40,8 @@ def checkNeighbors(mapa, x, y):
 
 def checkNeighbors(mapa, cell):
 	x,y = cell
-	for a in range(x-1, x+1):
-		for b in range(y-1, y+1):
+	for a in range(x-1, x+2):
+		for b in range(y-1, y+2):
 			if(valido(a,b)):
 				if(mapa[a][b]== ' '):
 					return 1
