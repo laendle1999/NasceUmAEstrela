@@ -120,9 +120,9 @@ def abrirVizinhos(grid, currgrid, rowno, colno):
                 if grid[r][c] == 'X':
                     print('Game Over\n')
                     showgrid(grid)
-                    if playagain():
-                        playgame()
-                    return
+                    #if playagain():
+                    #    playgame()
+                    return 
 
 
 def playagain():
@@ -221,8 +221,8 @@ def playgame():
             elif grid[rowno][colno] == 'X':
                 print('Game Over\n')
                 showgrid(grid)
-                if playagain():
-                    playgame()
+                #if playagain():
+                #    playgame()
                 return
 
             elif currcell == ' ':
@@ -240,8 +240,8 @@ def playgame():
                     'It took you {} minutes and {} seconds.\n'.format(minutes,
                                                                       seconds))
                 showgrid(grid)
-                if playagain():
-                    playgame()
+                #if playagain():
+                #    playgame()
                 return
 
         showgrid(currgrid)
@@ -281,8 +281,6 @@ def jogar(cell,currgrid,grid,flags,mines,flag=False):
         elif grid[rowno][colno] == 'X':
             print('Game Over\n')
             showgrid(grid)
-            if playagain():
-                playgame()
             return
 
         elif currcell == ' ':
@@ -293,14 +291,10 @@ def jogar(cell,currgrid,grid,flags,mines,flag=False):
             abrirVizinhos(grid, currgrid, rowno, colno)
 
         if set(flags) == set(mines):
-            #minutes, seconds = divmod(int(time.time() - starttime), 60)
             print(
-                'You Win. '
-                'It took you {} minutes and {} seconds.\n'.format(minutes,
-                                                                  seconds))
+                'Voce Ganhou. '
+                )
             showgrid(grid)
-            if playagain():
-                playgame()
             return
 
         showgrid(currgrid)

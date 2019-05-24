@@ -109,7 +109,7 @@ def casasAAbrir(mapa, cell):
 
 
 def funcHeurisitca(mapa,cell):
-	return casasAAbrir(mapa,cell) + contarCasas(mapa)
+	return casasAAbrir(mapa,cell) + contarCasas(mapa) + 100 * (1 - checarCasa(mapa,cell))
 
 
 def encontrarBombas(mapa):
@@ -161,6 +161,7 @@ def aEstrelaBusca():
 
 	jogar(cell,currgrid,grid,flags,mines)
 	while True:
+		logging.info("Rodando")
 		bombas = []
 		bombas = encontrarBombas(currgrid)
 		#print(bombas)
@@ -177,8 +178,6 @@ def aEstrelaBusca():
 			print("Acabou o Jogo")
 			break
 
-		print("abertos: ")
-		print(abertos)
 		logging.info("Abertos: " + str(abertos))
 		if abertos:
 			for cell in abertos:
@@ -187,9 +186,21 @@ def aEstrelaBusca():
 					cellAbrir = cell
 					val = temp
 
+		
+
 		jogar(cellAbrir,currgrid,grid,flags,mines)
 		logging.info(str(currgrid))
-		input("Pressione <enter> para continuar")
+		#input("Pressione <enter> para continuar")
+		game = True
+		for linha in currgrid:
+			for cell in linha:
+				if cell == 'X':
+					print("Acabou o Jogo")
+					game = False
+		
+		if not game:
+			break
+
 
 
 
