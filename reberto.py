@@ -31,8 +31,8 @@ def valido(x, y) :
 
 #checa todos os vizinhos
 def checkNeighbors(mapa, x, y):
-	for a in range(x-1, x+1):
-		for b in range(y-1, y+1):
+	for a in range(x-1, x+2):
+		for b in range(y-1, y+2):
 			if(valido(a,b)):
 				if(mapa[a][b]== ' '):
 					return 1
@@ -70,7 +70,7 @@ def gerarListas(mapa, abertos, fechados):
 				fechados.append((x,y))
 			elif(int(cell)!=0 and cell!=' ' and cell!='F'):
 				logging.info("Casa (%d,%d): Vizinhos %d, Bomba %f",x,y,checkNeighbors(mapa,(x,y)),checarCasa(mapa,(x,y)))
-				if(checkNeighbors(mapa,(x,y))==1 and checarCasa(mapa,(x,y)) == 0):
+				if(checkNeighbors(mapa,(x,y))==1):
 					abertos.append((x,y))
 				else:
 					fechados.append((x,y))
