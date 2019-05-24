@@ -2,6 +2,10 @@
 from dataclasses import dataclass
 import sys
 import time
+import logging
+logging.basicConfig(filename='minesweeperIa.log', level=logging.DEBUG,
+        format='%(levelname)s %(funcName)s => %(message)s')
+
 
 @dataclass
 class Tno_ad:
@@ -59,14 +63,13 @@ def gerarListas(mapa, abertos, fechados):
 		for cell in linha:
 			if(cell=='F'):
 				fechados.append((x,y))
+			elif(cell==" "):
+				x=x
 			elif(int(cell)==0):
-				print("oxi")
+				logging.debug("Casa (%d,%d): valor 0",x,y)
 				fechados.append((x,y))
 			elif(int(cell)!=0 and cell!=' ' and cell!='F'):
-				print("gerarListas")
-				print(str(x)+","+str(y))
-				print(checkNeighbors(mapa,(x,y)))
-				print(checarCasa(mapa,(x,y)))
+				logging.info("Casa (%d,%d): Vizinhos %d, Bomba %f",x,y,checkNeighbors(mapa,(x,y)),checarCasa(mapa,(x,y)))
 				if(checkNeighbors(mapa,(x,y))==1 and checarCasa(mapa,(x,y)) == 0):
 					abertos.append((x,y))
 				else:
@@ -80,14 +83,17 @@ def checarCasa(mapa, cell):
 	x,y = cell
 	for a in range(x-1, x+2):
 		for b in range(y-1, y+2):
-			#print(str(a) + " " + str(b))
 			if(valido(a,b)):
+			#print(str(a) + " " + str(b))
 				if(mapa[a][b] == ' '):
 					casasFechadas+= 1
 				elif(mapa[a][b] == 'F'):
 					bombas += 1
 
-	return (int(mapa[x][y]) - bombas)/ casasFechadas
+	if casasFechadas != 0:
+		return (int(mapa[x][y]) - bombas)/ casasFechadas
+	else:
+		return 0
 
 
 def casasAAbrir(mapa, cell):
@@ -117,11 +123,9 @@ def encontrarBombas(mapa):
 		for cell in linha:
 			if cell == " ":
 				vizinhos = getneighbors(mapa,x,y)
-				print(vizinhos)
+				logging.info(str(vizinhos))
 				for v in vizinhos:
-					if(getNumero(mapa,v) != " "):
-						#print(v)
-						#print(checarCasa(mapa,v))
+					if(getNumero(mapa,v) != " " and getNumero(mapa,v) != "F"):
 						probRedor.append(checarCasa(mapa,v))
 				if probRedor:
 					if max(probRedor) == 1:
@@ -159,21 +163,23 @@ def aEstrelaBusca():
 	while True:
 		bombas = []
 		bombas = encontrarBombas(currgrid)
-		print(bombas)
+		#print(bombas)
 		if bombas:
 			for b in bombas:
 				jogar(b,currgrid,grid,flags,mines,flag=True)
 
+		abertos = []
 		gerarListas(currgrid, abertos, fechados)
 		temp = 0
 		val = 0
 		cellAbrir = (0,0)
-		if contarCasas(currgrid) == 81:
+		if set(flags) == set(mines):
 			print("Acabou o Jogo")
 			break
 
 		print("abertos: ")
 		print(abertos)
+		logging.info("Abertos: " + str(abertos))
 		if abertos:
 			for cell in abertos:
 				temp = funcHeurisitca(currgrid,cell)
@@ -182,6 +188,7 @@ def aEstrelaBusca():
 					val = temp
 
 		jogar(cellAbrir,currgrid,grid,flags,mines)
+		logging.info(str(currgrid))
 		input("Pressione <enter> para continuar")
 
 

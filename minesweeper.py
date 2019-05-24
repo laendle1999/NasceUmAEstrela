@@ -304,6 +304,6 @@ def jogar(cell,currgrid,grid,flags,mines,flag=False):
             return
 
         showgrid(currgrid)
-        print(currgrid)
+        #print(currgrid)
 
 #playgame()
