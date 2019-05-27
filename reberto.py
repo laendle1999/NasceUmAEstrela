@@ -1,6 +1,5 @@
 #reberto.py agora vai jogar campo minado otarios
 from dataclasses import dataclass
-import sys
 import time
 import logging
 logging.basicConfig(filename='minesweeperIa.log', level=logging.DEBUG,
@@ -11,16 +10,10 @@ logging.basicConfig(filename='minesweeperIa.log', level=logging.DEBUG,
 class Tno_ad:
 	cell: (int,int)
 	f: float = -1
-'''
-def getNumero(mapa,x,y):
-	return mapa[x][y]
-'''
 
 def getNumero(mapa,cell):
 	x,y = cell
 	return mapa[x][y]
-
-
 
 #checa se a casa pertence ao tabuleiro
 def valido(x, y) :
@@ -55,27 +48,60 @@ def contarCasas(mapa):
 				x+=1
 	return x
 
-#gera a lista de nós abertos e fechados
-def gerarListas(mapa, abertos, fechados):
+def recalcularListas(mapa, abertos, fechados):
 	x=0
 	for linha in mapa:
 		y=0
 		for cell in linha:
-			if(cell=='F'):
-				fechados.append((x,y))
-			elif(cell==" "):
-				x=x
-			elif(int(cell)==0):
-				logging.debug("Casa (%d,%d): valor 0",x,y)
-				fechados.append((x,y))
-			elif(int(cell)!=0 and cell!=' ' and cell!='F'):
-				logging.info("Casa (%d,%d): Vizinhos %d, Bomba %f",x,y,checkNeighbors(mapa,(x,y)),checarCasa(mapa,(x,y)))
-				if(checkNeighbors(mapa,(x,y))==1):
-					abertos.append((x,y))
-				else:
-					fechados.append((x,y))
+			if((x,y) in abertos):
+				if(int(cell)!=0 and cell!=' ' and cell!='F'):
+					logging.info("Casa (%d,%d): Vizinhos %d, Bomba %f",x,y,checkNeighbors(mapa,(x,y)),checarCasa(mapa,(x,y)))
+					if(checkNeighbors(mapa,(x,y))==0):
+						abertos.remove((x,y))
+						fechados.append((x,y))
+			else:
+				if((x,y) not in fechados):
+					if(cell=='F'):
+						fechados.append((x,y))
+					elif(cell==" "):
+						x=x
+					elif(int(cell)==0):
+						logging.debug("Casa (%d,%d): valor 0",x,y)
+						fechados.append((x,y))
+					elif(int(cell)!=0 and cell!=' ' and cell!='F'):
+						logging.info("Casa (%d,%d): Vizinhos %d, Bomba %f",x,y,checkNeighbors(mapa,(x,y)),checarCasa(mapa,(x,y)))
+						if(checkNeighbors(mapa,(x,y))==1):
+							abertos.append((x,y))
+						else:
+							fechados.append((x,y))
 			y=y+1
 		x=x+1
+
+
+#gera a lista de nós abertos e fechados
+def gerarListas(mapa, abertos, fechados):
+	if not abertos:
+		x=0
+		for linha in mapa:
+			y=0
+			for cell in linha:
+				if(cell=='F'):
+					fechados.append((x,y))
+				elif(cell==" "):
+					x=x
+				elif(int(cell)==0):
+					logging.debug("Casa (%d,%d): valor 0",x,y)
+					fechados.append((x,y))
+				elif(int(cell)!=0 and cell!=' ' and cell!='F'):
+					logging.info("Casa (%d,%d): Vizinhos %d, Bomba %f",x,y,checkNeighbors(mapa,(x,y)),checarCasa(mapa,(x,y)))
+					if(checkNeighbors(mapa,(x,y))==1):
+						abertos.append((x,y))
+					else:
+						fechados.append((x,y))
+				y=y+1
+			x=x+1
+	else:
+		recalcularListas(mapa, abertos, fechados)
 
 def checarCasa(mapa, cell):
 	casasFechadas = 0
@@ -169,7 +195,6 @@ def aEstrelaBusca():
 			for b in bombas:
 				jogar(b,currgrid,grid,flags,mines,flag=True)
 
-		abertos = []
 		gerarListas(currgrid, abertos, fechados)
 		temp = 0
 		val = 0
@@ -201,82 +226,5 @@ def aEstrelaBusca():
 		if not game:
 			break
 
-
-
-
-
-
-
-
-
-
-
-'''
-#checar ao redor
-def checarCasa(cell, mapa, numero):
-	linha, coluna = cell
-	t = Tno_ad(cell)
-	print(t)
-	casasFechadas = 0
-	if (0 < linha < 8) and (0 < coluna < 8):
-		for x in [(linha-1), linha, (linha+1)]:
-			for y in [coluna-1, coluna, coluna+1]:
-				if mapa[x][y] == ' ': #ciaxa estiver fechada
-					casasFechadas+= 1
-				elif mapa[x][y] == 'F':#caixa que estiver marcada
-					casasFechadas-=1
-
-	elif (linha == 0) and (0 < coluna < 8):
-			for x in [linha, linha+1]:
-				for y in [coluna-1, coluna, coluna+1]:
-					if mapa[x][y] == ' ': #ciaxa estiver fechada
-						casasFechadas+= 1
-					elif mapa[x][y] == 'F':#caixa que estiver marcada
-						casasFechadas-=1
-
-	elif (linha == 8) and (0 < coluna < 8):
-			for x in [linha-1, linha]:
-				for y in [coluna-1, coluna, coluna+1]:
-					if mapa[x][y] == ' ': #ciaxa estiver fechada
-						casasFechadas+= 1
-					elif mapa[x][y] == 'F':#caixa que estiver marcada
-						casasFechadas-=1
-
-	elif (coluna == 0) and (0 < linha < 8):
-			for x in [coluna, coluna+1]:
-				for y in [linha-1, linha, linha+1]:
-					if mapa[y][x] == ' ': #ciaxa estiver fechada
-						casasFechadas+= 1
-					elif mapa[y][x] == 'F':#caixa que estiver marcada
-						casasFechadas-=1
-
-	elif (coluna == 8) and (0 < linha < 8):
-			for x in [coluna-1, coluna]:
-				for y in [linha-1, linha, linha+1]:
-					if mapa[y][x] == ' ': #ciaxa estiver fechada
-						casasFechadas+= 1
-					elif mapa[y][x] == 'F':#caixa que estiver marcada
-						casasFechadas-=1
-
-	if casasFechadas!=0:
-		prob = int(numero)/casasFechadas
-		t.f = prob
-		print(t)
-		return prob
-	else:
-		return 0
-	#retorn h(x) -> funcao heuristica
-
-#definir a f(x)
-
-mapa=eval(sys.argv[1])
-abertos=[]
-fechados=[]
-gerarListas(mapa, abertos, fechados)
-print('Abertos:')
-print(abertos)
-print('\nFechados')
-print(fechados)
-'''
 
 aEstrelaBusca()
