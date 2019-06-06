@@ -1,6 +1,8 @@
 #reberto.py agora vai jogar campo minado otarios
 from dataclasses import dataclass
 import time
+from PIL import Image
+import testeImagem as ti
 import logging
 logging.basicConfig(filename='minesweeperIa.log', level=logging.DEBUG,
         format='%(levelname)s %(funcName)s => %(message)s')
@@ -169,6 +171,9 @@ def aEstrelaBusca():
 
 	abertos=[]
 	fechados=[]
+	imagens=[]
+	arvore=[]
+	listaHeur=[]
 	
 	gridsize = 9
 	numberofmines = 10
@@ -178,14 +183,18 @@ def aEstrelaBusca():
 	starttime = 0
 	
 	currgrid = [[' ' for i in range(gridsize)] for i in range(gridsize)]
-	cell = (0,0)
+	cellAbrir = (0,0)
+	cell =[]
+	cell.append(cellAbrir)
+	listaHeur.append(1)
 
 	if not grid:
-		grid, mines = setupgrid(gridsize, cell, numberofmines)
+		grid, mines = setupgrid(gridsize, cellAbrir, numberofmines)
 	#if not starttime:
 		#starttime = time.time()
 
-	jogar(cell,currgrid,grid,flags,mines)
+	jogar(cellAbrir,currgrid,grid,flags,mines)
+	ti.fazerArvore(cell,None,listaHeur,arvore)
 	while True:
 		logging.info("Rodando")
 		bombas = []
@@ -194,12 +203,20 @@ def aEstrelaBusca():
 		if bombas:
 			for b in bombas:
 				jogar(b,currgrid,grid,flags,mines,flag=True)
-
+				ti.montarImagem(currgrid,imagens)
 		gerarListas(currgrid, abertos, fechados)
+		listaHeur = []
+		if abertos:
+			for c in abertos:
+				listaHeur.append(funcHeurisitca(currgrid,c))
+		ti.fazerArvore(abertos,cellAbrir,listaHeur,arvore)
+		
 		temp = 0
 		val = 0
 		cellAbrir = (0,0)
 		if set(flags) == set(mines):
+
+			ti.montarImagem(grid,imagens)
 			print("Acabou o Jogo")
 			break
 
@@ -215,6 +232,8 @@ def aEstrelaBusca():
 
 		jogar(cellAbrir,currgrid,grid,flags,mines)
 		logging.info(str(currgrid))
+		ti.montarImagem(currgrid,imagens)
+
 		#input("Pressione <enter> para continuar")
 		game = True
 		for linha in currgrid:
@@ -226,5 +245,7 @@ def aEstrelaBusca():
 		if not game:
 			break
 
+	ti.creategif(arvore,"arvore")
+	ti.creategif(imagens,"game")
 
 aEstrelaBusca()
