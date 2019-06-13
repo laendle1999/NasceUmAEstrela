@@ -38,10 +38,7 @@ c3 = Image.open("casa3.png")
 c3.thumbnail(size)
 '''
 def montarImagem(mapa,imagens):
-	i1 = Image.open("imagens/grade.png")
-	cBan = Image.open("imagens/casaBan.png")
-	cBan.thumbnail(size)
-	bomba = Image.open("imagens/bomba.png")
+	#FFFFFF
 	bomba.thumbnail(size)
 
 	#i1.paste(c2,(12,15))
@@ -88,6 +85,7 @@ def fazerArvore(cells, cellAnt, listaHeur,  arvore):
 
 
 	for c, h in zip(cells, listaHeur):
+		if c not in celulasAnteriores:
 		if c not in celulasAnteriores:
 				bas.paste(noArvore(c,cellAnt,h),posArvore(x,contador))
 				celulasJaPostas.append(objCasa(c,x,contador,cellAnt,h))
