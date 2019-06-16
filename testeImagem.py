@@ -86,11 +86,11 @@ def fazerArvore(cells, cellAnt, listaHeur,  arvore):
 
 	for c, h in zip(cells, listaHeur):
 		if c not in celulasAnteriores:
-		if c not in celulasAnteriores:
+			if c not in celulasAnteriores:
 				bas.paste(noArvore(c,cellAnt,h),posArvore(x,contador))
 				celulasJaPostas.append(objCasa(c,x,contador,cellAnt,h))
 				x+=1
-	contador += 1
+		contador += 1
 	arvore.append(bas.copy())
 
 
