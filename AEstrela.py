@@ -4,7 +4,7 @@ import logging
 
 class AEstrela(Agente):
 	def __init__(self):
-	 Agente.__init__(self)
+	 super().__init__()
 	 self.__abertos=[]
 	 self.__fechados=[]
 
@@ -13,12 +13,12 @@ class AEstrela(Agente):
 	 self.__abertos=[]
 	 self.__fechados=[]
 	 if not self.__abertos and not self.__fechados:
-		 p=super(self).__EstadoInicial
+		 p=self.__getEstadoInicial()
 		 self.__funcHeurisitca(p)
 		 self.__abertos.append(p)
 	 while(True):
 		 m=self.__melhorNo()
-		 if super(self).__jogadaValida(m):
+		 if self.__jogadaValida(m):
 		  return m
 		 elif not self.__abertos:
 		  return None

@@ -10,8 +10,11 @@ class Agente:
 		self.__conhecidos=[]
 		self.__EstadoInicial=TipoNo(0,0)
 
+	def __getEstadoInicial(self):
+		return self.__EstadoInicial
+
 	def __melhorNo(self):
-	 return
+		return
 
 	def _algoritmo(self):
 		return
@@ -57,28 +60,28 @@ class Agente:
 	 return
 
 	def encontrarBombas(self):
-	 vizinhos = []
-	 probRedor = []
-	 bombas = []
-	 x = 0
-	 for linha in self.__mapa:
-		 y = 0
-		 for cell in linha:
-		  if cell == " ":
-			  no=TipoNo(x,y)
-			  vizinhos = no.getVizinhos(self.__mapa)
-			  logging.info(str(vizinhos))
-			  for v in vizinhos:
-			   if(v.getData() != " " and v.getData() != "F"):
-				probRedor.append(v.checarCasa(self.__mapa))
-			  if probRedor:
-			   if max(probRedor) == 1:
-				bombas.append((x,y))
-			   probRedor = []	
-		  y+=1
-		 x+=1
+		vizinhos = []
+		probRedor = []
+		bombas = []
+		x = 0
+		for linha in self.__mapa:
+			y = 0
+			for cell in linha:
+				if cell == " ":
+					no=TipoNo(x,y)
+					vizinhos = no.getVizinhos(self.__mapa)
+					logging.info(str(vizinhos))
+					for v in vizinhos:
+						if(v.getData() != " " and v.getData() != "F"):
+							probRedor.append(v.checarCasa(self.__mapa))
+					if probRedor:
+						if max(probRedor) == 1:
+							bombas.append((x,y))
+						probRedor = []	
+				y+=1
+			x+=1
 
-	 return bombas
+		return bombas
 	
 	def jogadaInicial(self):
 	 return self.__EstadoInicial
