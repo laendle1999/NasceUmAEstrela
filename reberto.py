@@ -34,6 +34,8 @@ class TipoNo:
         vizinhos=[]
         for a in range(self.__x-1, self.__x+2):
             for b in range(self.__y-1, self.__y+2):
+                if(a==self.__x and b==self.__y):
+                    continue
                 if(self.__valido(a,b)):
                         no=TipoNo(a,b)
                         no.setData(mapa[a][b])
@@ -117,6 +119,8 @@ class AEstrela:
 
     def __algoritmo(self):
         sucessores=[]
+        self.__abertos=[]
+        self.__fechados=[]
         if not self.__abertos and not self.__fechados:
             p=self.__EstadoInicial
             self.__funcHeurisitca(p)
@@ -131,13 +135,13 @@ class AEstrela:
                 sucessores=m.getVizinhos(self.__mapa)
                 for c in sucessores:
                     self.__funcHeurisitca(c)
-                    if c not in self.__abertos or c not in self.__fechados:
+                    if c not in self.__abertos and c not in self.__fechados:
                         self.__abertos.append(c)
                 self.__abertos.remove(m)
                 self.__fechados.append(m)
 
     def __melhorNo(self):
-        melhor=(0,0)
+        melhor=TipoNo(0,0)
         val=0
         temp=0
         for n in self.__abertos:
@@ -163,8 +167,12 @@ class AEstrela:
             return False
         elif self.casasAAbrir(cell)==0:
             return False
-        else:
+        elif cell.getData()==' ':
+            return False
+        elif cell.checarCasa(self.__mapa)==0:
             return True
+        else:
+            return False
         
     def __contarCasas(self):
         x = 0
@@ -225,15 +233,15 @@ class BestFirst:
     pass
 
     
-'''
-ia=eval(sys.argv[1])
-gridsize=eval(sys.argv[2])
-numberofmines=eval(sys.argv[3])
-'''
-print('Algoritmos:\nA*:1\nBestFirst:2')
-ia= input('Selecione o Algoritmo(1 ou 2):')
-gridsize=input('Selecione o tamanho do tabuleiro:')
-numberofmines=input('Selecione o numero de bombas:')
+if sys.argv:
+    ia=sys.argv[1]
+    gridsize=sys.argv[2]
+    numberofmines=sys.argv[3]
+else:
+    print('Algoritmos:\nA*:1\nBestFirst:2')
+    ia= input('Selecione o Algoritmo(1 ou 2):')
+    gridsize=input('Selecione o tamanho do tabuleiro:')
+    numberofmines=input('Selecione o numero de bombas:')
 ia=int(ia)
 gridsize=int(gridsize)
 numberofmines=int(numberofmines)
