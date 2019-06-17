@@ -6,7 +6,9 @@ import sys
 import subprocess
 #import reberto as rere
 from string import ascii_lowercase
+from testeImagem import montarImagem, creategif
 
+imagens=[]
 
 def setupgrid(gridsize, start, numberofmines):
     emptygrid = [['0' for i in range(gridsize)] for i in range(gridsize)]
@@ -189,8 +191,11 @@ def jogar(cell,currgrid,grid,flags,mines,flag=False):
 
         if set(flags) == set(mines):
             print('Voce Ganhou.\n')
+            montarImagem(grid,imagens)
+            creategif(imagens,"game")
             showgrid(grid)
             return False
 
+        montarImagem(currgrid,imagens)
         showgrid(currgrid)
         return True

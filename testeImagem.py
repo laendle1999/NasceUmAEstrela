@@ -21,9 +21,6 @@ def posTabuleiro(x,y):
 def posArvore(x,y):
 	return (10 + (150 * x)),(10 + (50 * y))
 
-def computateImage(im):
-	return ImageDraw.Draw(im)
-
 def objCasa(cell,x,y,ant,h):
 	casa = {"cell": cell, "x": x, "y": y, "anterior": ant, "heuristica": h}
 	return casa
@@ -39,10 +36,11 @@ c3.thumbnail(size)
 '''
 def montarImagem(mapa,imagens):
 	#FFFFFF
-	bomba.thumbnail(size)
+	#bomba.thumbnail(size)
 
 	#i1.paste(c2,(12,15))
 	#i1.show()
+	i1 = Image.open("imagens/grade.png")
 
 	x=0
 	y=0
@@ -50,8 +48,12 @@ def montarImagem(mapa,imagens):
 	for linha in mapa:
 		for cell in linha:
 			if cell == "F":
+				cBan = Image.open("imagens/casaBan.png")
+				cBan.thumbnail(size)
 				i1.paste(cBan,posTabuleiro(y,x))
 			elif cell == "X":
+				bomba = Image.open("imagens/bomba.png")
+				bomba.thumbnail(size)
 				i1.paste(bomba,posTabuleiro(y,x))
 			elif cell != " ":
 				num = Image.open("imagens/casa" + cell + ".png")
@@ -64,8 +66,8 @@ def montarImagem(mapa,imagens):
 
 	imagens.append(i1)
 
-def creategif(imagens,nome):
-	imagens[0].save(str(nome)+'.gif', format='GIF', append_images=imagens[1:], save_all=True, duration=100, loop=0)
+def creategif(imagens,nome,duracao=100):
+	imagens[0].save(str(nome)+'.gif', format='GIF', append_images=imagens[1:], save_all=True, duration=duracao, loop=0)
 
 
 
