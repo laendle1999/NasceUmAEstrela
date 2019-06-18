@@ -19,6 +19,9 @@ class TipoNo:
 
 	def getY(self):
 		return self.__y
+	
+	def getXY(self):
+			return (self.__x,self.__y)
 
 	def setData(self, data):
 		self.__data=data

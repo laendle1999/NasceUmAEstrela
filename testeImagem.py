@@ -1,6 +1,7 @@
 #testeImagem.py
 
 from PIL import Image, ImageDraw, ImageFont
+from TipoNo import TipoNo
 
 comecoX = 12
 comecoY = 15
@@ -21,9 +22,24 @@ def posTabuleiro(x,y):
 def posArvore(x,y):
 	return (10 + (150 * x)),(10 + (50 * y))
 
-def objCasa(cell,x,y,ant,h):
-	casa = {"cell": cell, "x": x, "y": y, "anterior": ant, "heuristica": h}
+def objCasa(cell,x,y,ant):
+	casa = {"cell": cell, "x": x, "y": y, "anterior": ant}
 	return casa
+
+def compararObj(cell,objCasa):
+	if cell.getXY() == objCasa['cell'].getXY():
+		return True
+	else:
+		return False
+
+def buscarLista(cell,lista):
+	celulasAnteriores=[]
+	for c in celulasJaPostas:
+		celulasAnteriores.append(c['cell'])
+	if cell in celulasAnteriores:
+		return True
+	else:
+		return False
 
 '''
 
@@ -71,27 +87,22 @@ def creategif(imagens,nome,duracao=100):
 
 
 
-def fazerArvore(cells, cellAnt, listaHeur,  arvore):
+def fazerArvore(cells, cellAnt, arvore):
 	x = 0
-	celulasAnteriores=[]
-	for c in celulasJaPostas:
-		celulasAnteriores.append(c['cell'][:])
-
 	global contador
-	
+
 	for c in celulasJaPostas:
-		if c['cell'] == cellAnt:
-			bas.paste(noVisitado(c['cell'],c['anterior'],c["heuristica"]),posArvore(c['x'],c['y']))
+		if compararObj(cellAnt,c):
+			bas.paste(noVisitado(c['cell'].getXY(),c['anterior'],c['cell'].getF()),posArvore(c['x'],c['y']))
 
 	arvore.append(bas.copy())
 
 
-	for c, h in zip(cells, listaHeur):
-		if c not in celulasAnteriores:
-			if c not in celulasAnteriores:
-				bas.paste(noArvore(c,cellAnt,h),posArvore(x,contador))
-				celulasJaPostas.append(objCasa(c,x,contador,cellAnt,h))
-				x+=1
+	for c in cells:
+		if not buscarLista(c,celulasJaPostas):
+			bas.paste(noArvore(c.getXY(),cellAnt.getXY(),c.getF()),posArvore(x,contador))
+			celulasJaPostas.append(objCasa(c,x,contador,cellAnt))
+			x+=1
 		contador += 1
 	arvore.append(bas.copy())
 

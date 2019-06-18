@@ -1,8 +1,10 @@
 from TipoNo import TipoNo
+from testeImagem import fazerArvore
 import logging
 
 class AEstrela:
 	def __init__(self):
+		self.__imagem=[]
 		self.__abertos=[]
 		self.__fechados=[]
 		self.__mapa=[]
@@ -50,6 +52,9 @@ class AEstrela:
 
 	def __h(self, cell):
 		return self.casasAAbrir(cell) + 100 * (1 - cell.checarCasa(self.__mapa))
+	
+	def getArvore(self):
+			return self.__imagem
 
 	def __jogadaValida(self,cell):
 		if cell.getData()=='F':
@@ -90,6 +95,8 @@ class AEstrela:
 			jogada.setData('F')
 		else:
 			jogada=self.__algoritmo()
+			if str(type(jogada)) == "<class 'NoneType'>": #funciona, nao me julgue
+				fazerArvore(self.__abertos,jogada,self.__imagem)
 		return jogada
 
 	def encontrarBombas(self):

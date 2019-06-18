@@ -36,6 +36,9 @@ class Game:
 					game=mns.jogar(cellAbrir,currgrid,grid,flags,mines, flag=True)
 				else:
 					game=mns.jogar(cellAbrir,currgrid,grid,flags,mines)
+
+		print(self.__ia.getArvore())
+		ti.creategif(self.__ia.getArvore(),'arvore')			
 		return
 
 
