@@ -12,7 +12,7 @@ sepY = 2
 contador = 0
 
 celulasJaPostas = []
-bas = Image.new("RGB",(2000,800),color=(255,255,255,0))
+bas = Image.new("RGB",(2500,800),color=(255,255,255,0))
 
 size = tamX, tamY
 
@@ -22,8 +22,8 @@ def posTabuleiro(x,y):
 def posArvore(x,y):
 	return (10 + (150 * x)),(10 + (50 * y))
 
-def objCasa(cell,x,y,ant):
-	casa = {"cell": cell, "x": x, "y": y, "anterior": ant}
+def objCasa(cell,x,y,ant,h):
+	casa = {"cell": cell, "x": x, "y": y, "anterior": ant, "heuristica": h}
 	return casa
 
 def compararObj(cell,objCasa):
@@ -89,22 +89,34 @@ def creategif(imagens,nome,duracao=100):
 
 def fazerArvore(cells, cellAnt, arvore):
 	x = 0
-	global contador
-
+	w = 0
+	celulasAnteriores=[]
 	for c in celulasJaPostas:
-		if compararObj(cellAnt,c):
-			bas.paste(noVisitado(c['cell'].getXY(),c['anterior'],c['cell'].getF()),posArvore(c['x'],c['y']))
+		celulasAnteriores.append(c['cell'][:])
+
+	global contador
+	
+	for c in celulasJaPostas:
+		if c['cell'] == cellAnt.getXY():
+			bas.paste(noVisitado(c['cell'],c['anterior'],c["heuristica"]),posArvore(c['x'],c['y']))
 
 	arvore.append(bas.copy())
 
 
 	for c in cells:
-		if not buscarLista(c,celulasJaPostas):
-			bas.paste(noArvore(c.getXY(),cellAnt.getXY(),c.getF()),posArvore(x,contador))
-			celulasJaPostas.append(objCasa(c,x,contador,cellAnt))
+		if c.getXY() not in celulasAnteriores:
+			if str(type(cellAnt)) == "<class 'NoneType'>":
+				bas.paste(noArvore(c.getXY(),cellAnt,c.getF()),posArvore(x,contador))
+				celulasJaPostas.append(objCasa(c.getXY(),x,contador,cellAnt,c.getF()))
+			else:
+				bas.paste(noArvore(c.getXY(),cellAnt.getXY(),c.getF()),posArvore(x,contador))
+				celulasJaPostas.append(objCasa(c.getXY(),x,contador,cellAnt.getXY(),c.getF()))
+			w = 1
 			x+=1
-		contador += 1
+	contador += w
 	arvore.append(bas.copy())
+
+
 
 
 def noArvore(cell,cellAnt,funcH):

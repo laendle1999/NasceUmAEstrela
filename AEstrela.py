@@ -13,6 +13,8 @@ class AEstrela:
 
 	def __algoritmo(self):
 		sucessores=[]
+		self.__abertos=[]
+		self.__fechados=[]
 		
 		if not self.__abertos and not self.__fechados:
 			p=self.__EstadoInicial
@@ -56,6 +58,10 @@ class AEstrela:
 	def getArvore(self):
 			return self.__imagem
 
+	def getAbertos(self):
+			return self.__abertos
+
+
 	def __jogadaValida(self,cell):
 		if cell.getData()=='F':
 			return False
@@ -95,8 +101,7 @@ class AEstrela:
 			jogada.setData('F')
 		else:
 			jogada=self.__algoritmo()
-			if str(type(jogada)) == "<class 'NoneType'>": #funciona, nao me julgue
-				fazerArvore(self.__abertos,jogada,self.__imagem)
+
 		return jogada
 
 	def encontrarBombas(self):

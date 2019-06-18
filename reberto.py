@@ -18,6 +18,7 @@ class Game:
 		currgrid = [[' ' for i in range(gridsize)] for i in range(gridsize)]
 		grid = []
 		flags = []
+		cellAnt = None
 		game=True
 		cell=self.__ia.jogadaInicial()
 		cellAbrir=(cell.getX(),cell.getY())
@@ -28,6 +29,7 @@ class Game:
 			cell=self.__ia.definirJogada(currgrid)
 			if str(type(cell)) == "<class 'NoneType'>": #funciona, nao me julgue
 				print('Perdeu, a lista de abertos ficou vazia')
+				mns.montarGif()
 				game=False
 			else:
 				cellAbrir=(cell.getX(),cell.getY())
@@ -35,10 +37,12 @@ class Game:
 				if cell.getData()=='F':
 					game=mns.jogar(cellAbrir,currgrid,grid,flags,mines, flag=True)
 				else:
+					ti.fazerArvore(self.__ia.getAbertos(),cellAnt,self.__ia.getArvore())
 					game=mns.jogar(cellAbrir,currgrid,grid,flags,mines)
+					cellAnt  = cell
 
-		print(self.__ia.getArvore())
-		ti.creategif(self.__ia.getArvore(),'arvore')			
+
+		ti.creategif(self.__ia.getArvore(),'arvore',duracao=200)			
 		return
 
 
