@@ -18,10 +18,12 @@
 
 ### Como Execultar:
 Para execultar o código é necessario passar por linha de comando as escolhas de algortmo de busca(1 para A* e 2 para Best-First), tamanho do tabuleiro e numero de bombas
-'''
+```
 python3 reberto.py [algoritmo de escolha] [tamanho do tabuleiro] [ numero de bombas]
-'''
+```
 ### Resultados
 Foram testados 100 vezes os algoritmos, fazendo uma média e como resultado obtivemos que
 - Best-First: 52%
 - A*:  52%
+
+PS. Sorry, all code in portuguese
