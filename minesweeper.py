@@ -33,7 +33,7 @@ def showgrid(grid):
 	horizontal = '   ' + (4 * gridsize * '-') + '-'
 
 	# Print top column letters
-	toplabel = '	 '
+	toplabel = '     '
 
 	for i in ascii_lowercase[:gridsize]:
 		toplabel = toplabel + i + '   '
@@ -195,11 +195,11 @@ def jogar(cell,currgrid,grid,flags,mines,flag=False):
 
 		if set(flags) == set(mines):
 			print('Voce Ganhou.\n')
-			montarImagem(grid,imagens)
-			montarGif()
+			#montarImagem(grid,imagens)
+			#montarGif()
 			showgrid(grid)
 			return False
 
-		montarImagem(currgrid,imagens)
+		#montarImagem(currgrid,imagens)
 		showgrid(currgrid)
 		return True

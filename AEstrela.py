@@ -8,14 +8,13 @@ class AEstrela:
 		self.__abertos=[]
 		self.__fechados=[]
 		self.__mapa=[]
-		self.__conhecidos=[]
+		self.__contador=0
 		self.__EstadoInicial=TipoNo(0,0)
 
 	def __algoritmo(self):
 		sucessores=[]
 		self.__abertos=[]
 		self.__fechados=[]
-		
 		if not self.__abertos and not self.__fechados:
 			p=self.__EstadoInicial
 			self.__funcHeurisitca(p)
@@ -50,17 +49,16 @@ class AEstrela:
 		cell.setF(self.__g(cell) + self.__h(cell))
 
 	def __g(self, cell):
-		return self.__contarCasas()
+		return self.__contador
 
 	def __h(self, cell):
 		return self.casasAAbrir(cell) + 100 * (1 - cell.checarCasa(self.__mapa))
-	
+
 	def getArvore(self):
 			return self.__imagem
 
 	def getAbertos(self):
 			return self.__abertos
-
 
 	def __jogadaValida(self,cell):
 		if cell.getData()=='F':
@@ -102,6 +100,7 @@ class AEstrela:
 		else:
 			jogada=self.__algoritmo()
 
+		self.__contador+=1
 		return jogada
 
 	def encontrarBombas(self):
@@ -129,7 +128,5 @@ class AEstrela:
 		return bombas
 	
 	def jogadaInicial(self):
+		self.__contador+=1
 		return self.__EstadoInicial
-
-
-

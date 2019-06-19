@@ -1,9 +1,9 @@
 class TipoNo:
-	def __init__(self, x, y, gridsize = 8):
+	def __init__(self, x, y, gridsize=9):
 		self.__x=x
 		self.__y=y
 		self.__data=None
-		self._gridsize=gridsize
+		self.__gridsize = gridsize
 
 	def __eq__(self, outro):
 		return self.__x == outro.getX() and self.__y == outro.getY()
@@ -19,7 +19,7 @@ class TipoNo:
 
 	def getY(self):
 		return self.__y
-	
+
 	def getXY(self):
 			return (self.__x,self.__y)
 
@@ -42,8 +42,8 @@ class TipoNo:
 		return vizinhos
 	
 	def __valido(self, x, y) :
-		if (x < 0 or x > self._gridsize-1 or
-			y < 0 or y > self._gridsize-1) :
+		if (x < 0 or x > self.__gridsize-1 or
+			y < 0 or y > self.__gridsize-1) :
 			return False
 		return True
 

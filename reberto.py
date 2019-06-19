@@ -1,9 +1,11 @@
-import logging
 from AEstrela import AEstrela 
-from BestFirst import BestFirst
+from BestFirst import BestFirst 
+from TipoNo import TipoNo
+import logging
 import minesweeper as mns
 import testeImagem as ti
 import sys
+
 
 class Game:
 	def __init__(self):
@@ -19,6 +21,7 @@ class Game:
 		grid = []
 		flags = []
 		cellAnt = None
+		win = True
 		game=True
 		cell=self.__ia.jogadaInicial()
 		cellAbrir=(cell.getX(),cell.getY())
@@ -29,7 +32,8 @@ class Game:
 			cell=self.__ia.definirJogada(currgrid)
 			if str(type(cell)) == "<class 'NoneType'>": #funciona, nao me julgue
 				print('Perdeu, a lista de abertos ficou vazia')
-				mns.montarGif()
+				#mns.montarGif()
+				win = False
 				game=False
 			else:
 				cellAbrir=(cell.getX(),cell.getY())
@@ -37,17 +41,20 @@ class Game:
 				if cell.getData()=='F':
 					game=mns.jogar(cellAbrir,currgrid,grid,flags,mines, flag=True)
 				else:
-					ti.fazerArvore(self.__ia.getAbertos(),cellAnt,self.__ia.getArvore())
+					#ti.fazerArvore(self.__ia.getAbertos(),cellAnt,self.__ia.getArvore())
 					game=mns.jogar(cellAbrir,currgrid,grid,flags,mines)
 					cellAnt  = cell
 
 
-		ti.creategif(self.__ia.getArvore(),'arvore',duracao=200)			
-		return
+		#ti.creategif(self.__ia.getArvore(),'arvore',duracao=200)			
+		return win
 
 
-	
-if sys.argv:
+
+
+
+
+if len(sys.argv) > 1:
 	ia=sys.argv[1]
 	gridsize=sys.argv[2]
 	numberofmines=sys.argv[3]
@@ -59,5 +66,16 @@ else:
 ia=int(ia)
 gridsize=int(gridsize)
 numberofmines=int(numberofmines)
+'''
+vitoria = 0
+for x in range(0,101):
+	mine=Game()
+	if mine.jogo():
+		vitoria+=1
+
+print(str(vitoria/100))
+
+'''
 mine=Game()
 mine.jogo()
+
